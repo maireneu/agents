@@ -1,0 +1,11 @@
+{
+  "name": "hello-world",
+  "description": "Example plugin with a greeting command and skill",
+  "version": "0.1.0",
+  "author": {
+    "name": "maireneu"
+  },
+  "repository": "https://github.com/maireneu/Agents",
+  "license": "MIT",
+  "keywords": ["example", "greeting"]
+}

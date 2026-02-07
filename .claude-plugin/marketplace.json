@@ -1,0 +1,21 @@
+{
+  "name": "mrn-plugins",
+  "owner": {
+    "name": "maireneu",
+    "email": "maireneu@gmail.com"
+  },
+  "metadata": {
+    "description": "maireneu's Claude Code plugin marketplace"
+  },
+  "plugins": [
+    {
+      "name": "hello-world",
+      "source": "./claude/plugins/hello-world",
+      "description": "Example plugin with a greeting command",
+      "version": "0.1.0",
+      "author": {
+        "name": "maireneu"
+      }
+    }
+  ]
+}
