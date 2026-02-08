@@ -5,8 +5,16 @@ AI agent plugins organized by platform.
 ## Structure
 
 ```
-claude/    - Claude Code plugin marketplace (mrn-plugins)
-codex/     - OpenAI Codex plugins (planned)
+.claude-plugin/
+  marketplace.json   - Plugin marketplace registry
+claude/
+  plugins/
+    hello-world/     - Example plugin
+    mrn-rules/       - MRN coding rules sync plugin
+rules/               - MRN coding rules (source of truth)
+  common/            - Git, security rules
+  design/            - API, architecture, testing, coding style
+  language/          - Go, Kotlin, Python, TypeScript
 ```
 
 ## Claude Code Marketplace
@@ -19,19 +27,22 @@ codex/     - OpenAI Codex plugins (planned)
 
 ### Available plugins
 
-| Plugin | Description | Version |
-|--------|------------|---------|
-| hello-world | Example plugin with a greeting command | 0.1.0 |
+| Plugin | Description | Commands |
+|--------|------------|----------|
+| hello-world | Example plugin | `/hello-world:hello` |
+| mrn-rules | Sync MRN coding rules to project | `/mrn-rules:sync`, `/mrn-rules:unsync` |
+
+### mrn-rules plugin
+
+Syncs curated coding rules into your project's `.claude/rules/` directory.
+
+- `/mrn-rules:sync` - Analyzes your project, selects applicable rules, and copies them to `.claude/rules/`
+- `/mrn-rules:unsync` - Removes synced rules from `.claude/rules/` (with optional backup)
+
+Rules are auto-selected based on project characteristics (language, framework, build files). See `rules/README.md` for the full rule list and selection criteria.
 
 ### Local development
 
 ```bash
-claude --plugin-dir ./claude/plugins/hello-world
+claude --plugin-dir ./claude/plugins/<plugin-name>
 ```
-
-### Adding a new plugin
-
-1. Create a directory under `claude/plugins/<plugin-name>/`
-2. Add `.claude-plugin/plugin.json` with plugin metadata
-3. Add `commands/`, `skills/`, `agents/`, `hooks/` as needed
-4. Register the plugin in `.claude-plugin/marketplace.json` (repo root)
