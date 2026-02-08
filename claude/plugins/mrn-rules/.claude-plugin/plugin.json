@@ -1,0 +1,11 @@
+{
+  "name": "mrn-rules",
+  "description": "Sync MRN coding rules to project .claude/rules/",
+  "version": "0.1.0",
+  "author": {
+    "name": "maireneu"
+  },
+  "repository": "https://github.com/maireneu/Agents",
+  "license": "MIT",
+  "keywords": ["rules", "sync", "coding-standards"]
+}

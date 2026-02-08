@@ -16,6 +16,15 @@
       "author": {
         "name": "maireneu"
       }
+    },
+    {
+      "name": "mrn-rules",
+      "source": "./claude/plugins/mrn-rules",
+      "description": "Sync MRN coding rules to project .claude/rules/",
+      "version": "0.1.0",
+      "author": {
+        "name": "maireneu"
+      }
     }
   ]
 }
