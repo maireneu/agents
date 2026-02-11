@@ -28,7 +28,7 @@ Skip any fields already provided. Use `AskUserQuestion` to collect missing info.
 Search for a PR template file:
 1. Check `.github/pull_request_template.md`
 2. Check `pull_request_template.md` in repo root
-3. If not found → proceed without one
+3. If not found → use the default template at `${CLAUDE_PLUGIN_ROOT}/skills/create-pr/default-pr-template.md`
 
 ---
 
@@ -49,19 +49,10 @@ Understand the full scope of commits and file changes that will be included in t
 
 1. **Title**: Derive from the commit history. Keep under 70 characters.
 2. **Body**:
-   - If a PR template was found → fill in the template
-   - Otherwise → use this default structure:
-     ```
-     ## Summary
-     <bullet points summarizing changes>
-
-     ## Changes
-     <list of key modified files/modules>
-
-     ## Test Plan
-     <how changes were tested>
-     ```
-   - If the branch is associated with a GitHub issue (detected from branch name pattern like `issue-#N` or `#N`), include `Closes #<issue_number>` in the body
+   - Fill in the template found in Step 1.3 (repo template or default template)
+   - Follow the `<!-- AI: ... -->` comments in the template as guidance for each section
+   - Delete sections that are not applicable (e.g., Screenshots for non-visual changes)
+   - If the branch is associated with a GitHub issue (detected from branch name pattern like `issue-#N` or `#N`), include `Closes #<issue_number>` in the `Resolves` field
 
 ---
 
