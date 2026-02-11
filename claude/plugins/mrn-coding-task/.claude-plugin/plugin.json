@@ -1,0 +1,11 @@
+{
+  "name": "mrn-coding-task",
+  "description": "GitHub Issue-driven coding workflow automation (analyze → plan → implement → PR)",
+  "version": "0.1.0",
+  "author": {
+    "name": "maireneu"
+  },
+  "repository": "https://github.com/maireneu/Agents",
+  "license": "MIT",
+  "keywords": ["github", "issue", "workflow", "coding", "pr"]
+}
