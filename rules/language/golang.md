@@ -73,7 +73,6 @@ project/
 **(SHOULD)** Handle recover in HTTP middleware
 
 ## Testing
-Format: `Test<Function>_<State>_<Expected>`
 **(SHOULD)** Use Table-Driven Tests with `t.Run()` for 2+ cases
 **(MUST)** Call `t.Helper()` in helper functions
 **(MAY)** testify/mock, gomock allowed

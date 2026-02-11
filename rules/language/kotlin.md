@@ -98,12 +98,6 @@ project/
 **(MAY)** Koin, Hilt, etc. allowed
 
 ## Testing
-Format: `methodName - state - expectedBehavior`
-```kotlin
-@Test
-fun `getModel - model exists - returns model`() { ... }
-```
-**(MAY)** Kotest FreeSpec or StringSpec recommended
 **(SHOULD)** Use MockK library
 **(MUST)** Test suspend functions with `runTest`
 

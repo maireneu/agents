@@ -73,11 +73,6 @@ async with ResourceClient() as client:
 
 ## Testing
 **(MUST)** Use pytest
-Test naming: `test_method__state__expected`
-```python
-def test_get_model__model_exists__returns_model(): ...
-def test_get_model__not_found__raises_error(): ...
-```
 **(MUST)** Use `pytest-asyncio` for async function tests
 **(SHOULD)** Use `unittest.mock` or `pytest-mock` for mocking
 

@@ -8,10 +8,14 @@
 **(SHOULD)** Test private/internal implementation through public interfaces
 
 ## Naming Convention
-Format: `MethodName_StateUnderTest_ExpectedBehavior`
-- snake_case languages: `method_name__state__expected`
-- camelCase languages: `methodName_state_expected`
+**(MUST)** Test names describe behavior/scenario, not method names
+**(MUST)** Format: `situation_expectedResult` or natural language descriptive style if the language supports it
 **(SHOULD)** Follow existing test style if tests already exist
+
+## Test Structure
+**(MUST)** Write in Arrange-Act-Assert order
+**(SHOULD)** Separate each section with a blank line
+**(MAY)** Use `// Arrange`, `// Act`, `// Assert` comments (recommended when working with AI tools)
 
 ## Mock (Unit Tests)
 **(MUST)** Use mocks for all external dependencies (DB, network, filesystem) in unit tests
