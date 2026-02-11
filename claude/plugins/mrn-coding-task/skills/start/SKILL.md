@@ -97,15 +97,9 @@ Use `Glob`, `Grep`, `Read`, and the `Task` tool with `Explore` agent as needed.
 
 Gather PR-related information before planning implementation.
 
-1. Use a single `AskUserQuestion` with two questions:
-   - **Base branch**: Which branch should the PR target? (default: `develop`)
-   - **Reviewers**: Who should review the PR? (free text input)
-
-2. Search for a PR template:
-   - Check `.github/pull_request_template.md`
-   - Check `pull_request_template.md` in repo root
-   - Search for `PULL_REQUEST_TEMPLATE` directory
-   - If not found → ask user via `AskUserQuestion` for template path, or proceed without one
+Use a single `AskUserQuestion` with two questions:
+- **Base branch**: Which branch should the PR target? (default: `develop`)
+- **Reviewers**: Who should review the PR? (free text input)
 
 ---
 
@@ -174,20 +168,13 @@ Use `AskUserQuestion` to request commit approval:
 
 ### Phase 10: PR Creation
 
-After all steps are committed, create the pull request.
+After all steps are committed, delegate to the `create-pr` skill.
 
-1. Push the branch to remote:
-   ```bash
-   git push -u origin <branch-name>
-   ```
-2. Create the PR:
-   - Title: derived from the issue title
-   - Body: use PR template if found, otherwise use a standard format
-   - **Always include `Closes #<issue_number>`** in the PR body for auto-close on merge
-   - Base: the branch confirmed in Phase 6
-   - Reviewers: as specified in Phase 6
+Pass the following info already collected in Phase 6:
+- Base branch
+- Reviewers
 
-*(When the `create-pr` skill is added to this plugin, this phase will delegate to that skill instead.)*
+The `create-pr` skill will handle pushing, drafting, user review, and PR creation.
 
 ---
 
