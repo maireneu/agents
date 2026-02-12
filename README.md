@@ -22,7 +22,7 @@ rules/               - MRN coding rules (source of truth)
 ### Adding this marketplace
 
 ```bash
-/plugin marketplace add maireneu/Agents
+/plugin marketplace add maireneu/agents
 ```
 
 ### Available plugins

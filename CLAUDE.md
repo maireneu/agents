@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Repo Is
 
-A Claude Code plugin marketplace (`mrn-plugins`) owned by `maireneu`. Contains reusable plugins and coding rules that can be installed into any project via `/plugin marketplace add maireneu/Agents`.
+A Claude Code plugin marketplace (`mrn-plugins`) owned by `maireneu`. Contains reusable plugins and coding rules that can be installed into any project via `/plugin marketplace add maireneu/agents`.
 
 ## Architecture
 
