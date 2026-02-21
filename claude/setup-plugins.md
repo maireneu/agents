@@ -1,13 +1,15 @@
 # Plugin Setup for Remote Sessions
 
-You are reading this document because a user wants to configure the **maireneu/agents** plugin marketplace in their current project. Follow the instructions below step by step.
+You are reading this document because a user wants to configure the **maireneu/agents** plugin marketplace. Follow the instructions below step by step.
 
 ## Overview
 
 This document instructs you to:
 1. Discover available plugins from the marketplace
 2. Present them to the user for selection
-3. Write (or merge into) the project's `.claude/settings.json`
+3. Merge plugin settings into the **user-level** `~/.claude/settings.json`
+
+> **Why user-level?** Writing to the project's `.claude/settings.json` would create untracked files in the target repository, causing commit/gitignore issues. User-level settings apply across all projects without polluting any repo.
 
 ## Step 1: Discover Available Plugins
 
@@ -28,15 +30,15 @@ Show the user a summary of each discovered plugin:
 - Available **commands** (slash commands) and **skills**, if found
 - A brief explanation of what each plugin does
 
-Then ask the user which plugins they want to enable. Use a multi-select question so they can pick any combination. Exclude obviously internal or example-only plugins (like `hello-world`) from the default recommendation, but still list them as available.
+Then ask the user which plugins they want to enable. Use the `AskUserQuestion` tool with `multiSelect: true` so the user can pick any combination via checkboxes. Exclude obviously internal or example-only plugins (like `hello-world`) from the default recommendation, but still list them as available.
+
+If the user cannot interact with the multi-select UI (e.g., on mobile), fall back to asking them to list their choices in plain text.
 
 ## Step 3: Write Settings
 
-Based on the user's selection, write or merge into `.claude/settings.json` in the **current project root**.
+Based on the user's selection, merge into `~/.claude/settings.json` (the **user-level** settings file).
 
-### If `.claude/settings.json` does not exist
-
-Create it with this structure:
+### Settings to add
 
 ```json
 {
@@ -56,17 +58,17 @@ Create it with this structure:
 
 Replace `<plugin-name>` with each selected plugin's name (e.g., `mrn-rules@mrn-plugins`).
 
-### If `.claude/settings.json` already exists
+### Merge rules
 
-Merge carefully:
+- Read the existing `~/.claude/settings.json` first
 - Add `mrn-plugins` to `extraKnownMarketplaces` if not already present
 - Add selected plugins to `enabledPlugins`, preserving any existing entries
-- Do NOT overwrite or remove existing settings
+- Do NOT overwrite or remove any existing settings (hooks, permissions, etc.)
 
 ## Step 4: Confirm
 
 After writing the file, show the user:
-1. The final contents of `.claude/settings.json`
+1. The final contents of `~/.claude/settings.json`
 2. A note that the settings may require a **session restart** to take effect
 3. Suggest the user restart the session (or let it go idle and resume) for plugins to load
 
@@ -76,3 +78,4 @@ After writing the file, show the user:
 - The marketplace source is the GitHub repo `maireneu/agents`.
 - Always read from the live marketplace registry — never hardcode plugin lists.
 - Respect existing settings — merge, don't overwrite.
+- Target file is `~/.claude/settings.json` (user-level), NOT the project's `.claude/settings.json`.
