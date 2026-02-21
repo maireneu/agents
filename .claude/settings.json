@@ -1,0 +1,15 @@
+{
+  "extraKnownMarketplaces": {
+    "mrn-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "maireneu/agents"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "mrn-rules@mrn-plugins": true,
+    "mrn-coding-task@mrn-plugins": true,
+    "hello-world@mrn-plugins": true
+  }
+}
