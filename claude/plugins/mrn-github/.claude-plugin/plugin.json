@@ -1,0 +1,20 @@
+{
+  "name": "mrn-github",
+  "description": "GitHub MCP integration via remote HTTP endpoint",
+  "version": "0.1.0",
+  "author": {
+    "name": "maireneu"
+  },
+  "repository": "https://github.com/maireneu/agents",
+  "license": "MIT",
+  "keywords": ["github", "mcp", "issues", "pull-requests"],
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_TOKEN}"
+      }
+    }
+  }
+}
