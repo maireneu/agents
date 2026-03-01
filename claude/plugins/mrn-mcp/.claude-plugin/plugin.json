@@ -1,13 +1,13 @@
 {
-  "name": "mrn-github",
-  "description": "GitHub MCP integration via remote HTTP endpoint",
+  "name": "mrn-mcp",
+  "description": "MCP server integrations (GitHub, etc.)",
   "version": "0.1.0",
   "author": {
     "name": "maireneu"
   },
   "repository": "https://github.com/maireneu/agents",
   "license": "MIT",
-  "keywords": ["github", "mcp", "issues", "pull-requests"],
+  "keywords": ["mcp", "github", "integrations"],
   "mcpServers": {
     "github": {
       "type": "http",

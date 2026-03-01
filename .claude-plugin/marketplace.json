@@ -36,9 +36,9 @@
       }
     },
     {
-      "name": "mrn-github",
-      "source": "./claude/plugins/mrn-github",
-      "description": "GitHub MCP integration via remote HTTP endpoint",
+      "name": "mrn-mcp",
+      "source": "./claude/plugins/mrn-mcp",
+      "description": "MCP server integrations (GitHub, etc.)",
       "version": "0.1.0",
       "author": {
         "name": "maireneu"
