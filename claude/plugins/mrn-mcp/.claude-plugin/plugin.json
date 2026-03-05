@@ -1,0 +1,20 @@
+{
+  "name": "mrn-mcp",
+  "description": "MCP server integrations (GitHub, etc.)",
+  "version": "0.1.0",
+  "author": {
+    "name": "maireneu"
+  },
+  "repository": "https://github.com/maireneu/agents",
+  "license": "MIT",
+  "keywords": ["mcp", "github", "integrations"],
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_TOKEN}"
+      }
+    }
+  }
+}
