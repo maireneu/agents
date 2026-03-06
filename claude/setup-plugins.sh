@@ -72,6 +72,57 @@ while IFS= read -r plugin; do
   fi
 done <<< "${plugins}"
 
+# --- Global permissions ---
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PERMISSIONS_FILE="${SCRIPT_DIR}/permissions.json"
+SETTINGS_FILE="${HOME}/.claude/settings.json"
+
+if [[ -f "${PERMISSIONS_FILE}" ]]; then
+  echo "[setup-plugins] Merging permissions from ${PERMISSIONS_FILE}..."
+  mkdir -p "${HOME}/.claude"
+
+  if [[ -f "${SETTINGS_FILE}" ]]; then
+    python3 -c "
+import sys, json
+
+with open(sys.argv[1]) as f:
+    perms = json.load(f)
+with open(sys.argv[2]) as f:
+    settings = json.load(f)
+
+allow = settings.setdefault('permissions', {}).setdefault('allow', [])
+for rule in perms.get('allow', []):
+    if rule not in allow:
+        allow.append(rule)
+
+with open(sys.argv[2], 'w') as f:
+    json.dump(settings, f, indent=2)
+    f.write('\n')
+" "${PERMISSIONS_FILE}" "${SETTINGS_FILE}" || {
+      echo "[setup-plugins] Warning: failed to merge permissions" >&2
+    }
+  else
+    python3 -c "
+import sys, json
+
+with open(sys.argv[1]) as f:
+    perms = json.load(f)
+
+settings = {'permissions': {'allow': perms.get('allow', [])}}
+
+with open(sys.argv[2], 'w') as f:
+    json.dump(settings, f, indent=2)
+    f.write('\n')
+" "${PERMISSIONS_FILE}" "${SETTINGS_FILE}" || {
+      echo "[setup-plugins] Warning: failed to create settings with permissions" >&2
+    }
+  fi
+  echo "[setup-plugins] Permissions updated in ${SETTINGS_FILE}"
+else
+  echo "[setup-plugins] Warning: ${PERMISSIONS_FILE} not found, skipping permissions" >&2
+fi
+
 # --- Summary ---
 
 echo ""
