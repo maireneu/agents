@@ -1,11 +1,39 @@
 #!/usr/bin/env bash
-# setup-plugins.sh — Auto-install all plugins from maireneu/agents marketplace.
+# setup-plugins.sh — Auto-install official Claude plugins and maireneu/agents marketplace plugins.
 # Register this script in your cloud environment's "pre-session" shell command.
 #
 # Prerequisites: curl, python3, claude CLI
 # Safe to run multiple times (idempotent).
 
 set -euo pipefail
+
+# --- Official Claude plugins (claude-plugins-official) ---
+
+OFFICIAL_PLUGINS=(
+  code-review
+  pr-review-toolkit
+  superpowers
+  github
+  typescript-lsp
+  pyright-lsp
+  gopls-lsp
+  rust-analyzer-lsp
+  kotlin-lsp
+)
+
+echo "[setup-plugins] Installing official Claude plugins..."
+for plugin in "${OFFICIAL_PLUGINS[@]}"; do
+  echo "[setup-plugins] Installing: ${plugin}@claude-plugins-official"
+  if ! claude plugin install "${plugin}@claude-plugins-official" 2>&1; then
+    echo "[setup-plugins] Warning: failed to install ${plugin}, skipping" >&2
+  fi
+done
+
+if [[ -z "${GITHUB_PERSONAL_ACCESS_TOKEN:-}" ]]; then
+  echo "[setup-plugins] Warning: GITHUB_PERSONAL_ACCESS_TOKEN is not set — github plugin will fail to authenticate" >&2
+fi
+
+# --- mrn-plugins marketplace ---
 
 MARKETPLACE_REPO="maireneu/agents"
 MARKETPLACE_NAME="mrn-plugins"
@@ -44,9 +72,11 @@ while IFS= read -r plugin; do
   fi
 done <<< "${plugins}"
 
-if [[ -z "${GITHUB_TOKEN:-}" ]]; then
-  echo "[setup-plugins] Warning: GITHUB_TOKEN is not set — mrn-mcp plugin will fail to authenticate" >&2
-fi
+# --- Summary ---
 
+echo ""
 echo "[setup-plugins] Done. Installed plugins:"
-echo "${plugins}" | sed 's/^/  - /'
+echo "  Official:"
+printf '    - %s\n' "${OFFICIAL_PLUGINS[@]}"
+echo "  mrn-plugins:"
+echo "${plugins}" | sed 's/^/    - /'
