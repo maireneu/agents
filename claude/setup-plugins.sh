@@ -72,6 +72,42 @@ while IFS= read -r plugin; do
   fi
 done <<< "${plugins}"
 
+# --- Global rules (from remote repo) ---
+
+RULES_API_URL="https://api.github.com/repos/${MARKETPLACE_REPO}/git/trees/main?recursive=1"
+RULES_RAW_BASE="https://raw.githubusercontent.com/${MARKETPLACE_REPO}/main"
+RULES_DEST="${HOME}/.claude/rules"
+
+echo "[setup-plugins] Syncing global rules from ${MARKETPLACE_REPO}..."
+mkdir -p "${RULES_DEST}"
+
+rule_files=$(curl -fsSL "${RULES_API_URL}" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+for item in data.get('tree', []):
+    path = item['path']
+    if path.startswith('rules/') and path.endswith('.md') and item['type'] == 'blob':
+        print(path)
+") || {
+  echo "[setup-plugins] Warning: failed to fetch rules tree" >&2
+  rule_files=""
+}
+
+rules_count=0
+while IFS= read -r rule_path; do
+  [[ -z "${rule_path}" ]] && continue
+  rel_path="${rule_path#rules/}"
+  dest_path="${RULES_DEST}/${rel_path}"
+  mkdir -p "$(dirname "${dest_path}")"
+  if curl -fsSL "${RULES_RAW_BASE}/${rule_path}" -o "${dest_path}" 2>/dev/null; then
+    rules_count=$((rules_count + 1))
+  else
+    echo "[setup-plugins] Warning: failed to download ${rule_path}" >&2
+  fi
+done <<< "${rule_files}"
+
+echo "[setup-plugins] Synced ${rules_count} rule files to ${RULES_DEST}"
+
 # --- Global permissions ---
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
