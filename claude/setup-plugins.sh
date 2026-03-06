@@ -13,6 +13,7 @@ OFFICIAL_PLUGINS=(
   code-review
   pr-review-toolkit
   superpowers
+  feature-dev
   github
   typescript-lsp
   pyright-lsp
