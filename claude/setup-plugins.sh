@@ -96,6 +96,8 @@ for rule in perms.get('allow', []):
     if rule not in allow:
         allow.append(rule)
 
+settings['effortLevel'] = 'max'
+
 with open(sys.argv[2], 'w') as f:
     json.dump(settings, f, indent=2)
     f.write('\n')
@@ -109,7 +111,7 @@ import sys, json
 with open(sys.argv[1]) as f:
     perms = json.load(f)
 
-settings = {'permissions': {'allow': perms.get('allow', [])}}
+settings = {'permissions': {'allow': perms.get('allow', [])}, 'effortLevel': 'max'}
 
 with open(sys.argv[2], 'w') as f:
     json.dump(settings, f, indent=2)
