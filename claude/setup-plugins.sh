@@ -111,12 +111,15 @@ echo "[setup-plugins] Synced ${rules_count} rule files to ${RULES_DEST}"
 
 # --- Global permissions ---
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PERMISSIONS_FILE="${SCRIPT_DIR}/permissions.json"
+PERMISSIONS_URL="${RULES_RAW_BASE}/claude/permissions.json"
 SETTINGS_FILE="${HOME}/.claude/settings.json"
 
-if [[ -f "${PERMISSIONS_FILE}" ]]; then
-  echo "[setup-plugins] Merging permissions from ${PERMISSIONS_FILE}..."
+echo "[setup-plugins] Downloading permissions.json from ${MARKETPLACE_REPO}..."
+PERMISSIONS_TMP="$(mktemp)"
+trap 'rm -f "$PERMISSIONS_TMP"' EXIT
+
+if curl -fsSL "${PERMISSIONS_URL}" -o "${PERMISSIONS_TMP}" 2>/dev/null; then
+  echo "[setup-plugins] Merging permissions into ${SETTINGS_FILE}..."
   mkdir -p "${HOME}/.claude"
 
   if [[ -f "${SETTINGS_FILE}" ]]; then
@@ -138,7 +141,7 @@ settings['effortLevel'] = 'max'
 with open(sys.argv[2], 'w') as f:
     json.dump(settings, f, indent=2)
     f.write('\n')
-" "${PERMISSIONS_FILE}" "${SETTINGS_FILE}" || {
+" "${PERMISSIONS_TMP}" "${SETTINGS_FILE}" || {
       echo "[setup-plugins] Warning: failed to merge permissions" >&2
     }
   else
@@ -153,13 +156,13 @@ settings = {'permissions': {'allow': perms.get('allow', [])}, 'effortLevel': 'ma
 with open(sys.argv[2], 'w') as f:
     json.dump(settings, f, indent=2)
     f.write('\n')
-" "${PERMISSIONS_FILE}" "${SETTINGS_FILE}" || {
+" "${PERMISSIONS_TMP}" "${SETTINGS_FILE}" || {
       echo "[setup-plugins] Warning: failed to create settings with permissions" >&2
     }
   fi
   echo "[setup-plugins] Permissions updated in ${SETTINGS_FILE}"
 else
-  echo "[setup-plugins] Warning: ${PERMISSIONS_FILE} not found, skipping permissions" >&2
+  echo "[setup-plugins] Warning: failed to download permissions.json, skipping permissions" >&2
 fi
 
 # --- Summary ---
