@@ -34,15 +34,21 @@ if [[ -z "${GITHUB_PERSONAL_ACCESS_TOKEN:-}" ]]; then
   echo "[setup-plugins] Warning: GITHUB_PERSONAL_ACCESS_TOKEN is not set — github plugin will fail to authenticate" >&2
 fi
 
-# --- mrn-plugins marketplace ---
+# --- Marketplace registration ---
 
+OFFICIAL_MARKETPLACE="anthropics/claude-plugins-official"
 MARKETPLACE_REPO="maireneu/agents"
 MARKETPLACE_NAME="mrn-plugins"
 REGISTRY_URL="https://raw.githubusercontent.com/${MARKETPLACE_REPO}/main/.claude-plugin/marketplace.json"
 
+echo "[setup-plugins] Registering marketplace: ${OFFICIAL_MARKETPLACE}"
+if ! claude plugin marketplace add "${OFFICIAL_MARKETPLACE}" 2>&1; then
+  echo "[setup-plugins] Warning: official marketplace registration failed, continuing anyway"
+fi
+
 echo "[setup-plugins] Registering marketplace: ${MARKETPLACE_REPO}"
 if ! claude plugin marketplace add "${MARKETPLACE_REPO}" 2>&1; then
-  echo "[setup-plugins] Warning: marketplace registration failed, continuing anyway"
+  echo "[setup-plugins] Warning: mrn-plugins marketplace registration failed, continuing anyway"
 fi
 
 echo "[setup-plugins] Fetching plugin registry..."
