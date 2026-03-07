@@ -4,12 +4,12 @@ user-invocable: true
 argument-hint: "[issue-number]"
 ---
 
-# Start Coding Task v2
+# Solve Issue
 
 GitHub Issue-driven coding workflow that delegates core development phases to superpowers skills for higher quality output.
 
-**Inline phases** (1–4, 7, 11–12): GitHub Issue lifecycle management.
-**Delegated phases** (5–6, 8–10, 13): Core development via specialized skills.
+**Inline phases** (1–4, 6, 11–12): GitHub Issue lifecycle management.
+**Delegated phases** (5, 7–10, 13): Core development via specialized skills.
 
 ## Instructions
 
@@ -100,25 +100,7 @@ After agents complete:
 
 ---
 
-### Phase 6: Brainstorming (Delegated)
-
-Invoke `superpowers:brainstorming` via the `Skill` tool.
-
-**Context to provide**: Before invoking, summarize the following so the skill has full context:
-- Issue title, body, and key comments (from Phase 4)
-- Codebase analysis findings (from Phase 5)
-
-The brainstorming skill will:
-1. Ask clarifying questions one at a time
-2. Propose 2–3 approaches with trade-offs
-3. Present a design for user approval
-4. Save a design doc to `docs/plans/YYYY-MM-DD-<topic>-design.md`
-
-**Override**: When the skill finishes and invokes `writing-plans`, let it proceed naturally — this flows into Phase 8.
-
----
-
-### Phase 7: PR Info Pre-collection
+### Phase 6: PR Info Pre-collection
 
 Gather PR-related information before planning implementation.
 
@@ -133,15 +115,30 @@ Store the selected commit mode for use in Phase 9.
 
 ---
 
-### Phase 8: Implementation Planning (Delegated)
+### Phase 7: Brainstorming (Delegated)
 
-Invoke `superpowers:writing-plans` via the `Skill` tool.
-
-**Note**: If this was already invoked by the brainstorming skill in Phase 6, skip this phase.
+Invoke `superpowers:brainstorming` via the `Skill` tool.
 
 **Context to provide**: Before invoking, summarize the following so the skill has full context:
-- Design document (from Phase 6)
-- Base branch and reviewers (from Phase 7)
+- Issue title, body, and key comments (from Phase 4)
+- Codebase analysis findings (from Phase 5)
+
+The brainstorming skill will:
+1. Ask clarifying questions one at a time
+2. Propose 2–3 approaches with trade-offs
+3. Present a design for user approval
+4. Save a design doc to `docs/plans/YYYY-MM-DD-<topic>-design.md`
+5. Invoke `writing-plans` as its terminal state — let it proceed naturally into Phase 8
+
+---
+
+### Phase 8: Implementation Planning (Delegated)
+
+`superpowers:writing-plans` is invoked by the brainstorming skill at the end of Phase 7.
+
+**Context to provide**: Ensure the following context is available when writing-plans executes:
+- Design document (from Phase 7)
+- Base branch, reviewers, and commit mode (from Phase 6)
 
 **Override**: When `writing-plans` finishes and offers execution choices (subagent-driven vs parallel session), do NOT select either. Instead, continue to Phase 9.
 
@@ -155,12 +152,14 @@ Invoke `superpowers:subagent-driven-development` via the `Skill` tool.
 
 **Context to provide**:
 - The implementation plan created in Phase 8
-- **Commit mode** selected in Phase 7:
+- **Commit mode** selected in Phase 6:
   - If **auto-commit**: Include in every implementer subagent prompt: "After tests pass, commit immediately with the planned commit message. Do NOT ask for user confirmation."
   - If **confirm each**: Include in every implementer subagent prompt: "After tests pass, present a summary of changes and wait for user approval before committing."
 
 **Overrides**:
-- **Git worktree**: The skill marks worktrees as REQUIRED. Since we already created a feature branch in Phase 2, skip the worktree requirement. The feature branch provides sufficient isolation.
+- **Git worktree**: The skill marks worktrees as REQUIRED. Apply conditionally:
+  - If the current branch **is the same as** the base branch (from Phase 6) → use a git worktree for isolation as the skill requires.
+  - If the current branch **is different from** the base branch (i.e., already on a feature branch from Phase 2) → skip the worktree requirement. The feature branch provides sufficient isolation.
 - **Finishing**: When the skill reaches `finishing-a-development-branch`, do NOT invoke that skill. Instead, continue to Phase 11.
 
 The skill will execute each task with:
@@ -191,7 +190,7 @@ Include this instruction in every implementer subagent prompt dispatched in Phas
 
 After all steps are committed, delegate to the `create-pr` skill.
 
-Pass the following info already collected in Phase 7:
+Pass the following info already collected in Phase 6:
 - Base branch
 - Reviewers
 
