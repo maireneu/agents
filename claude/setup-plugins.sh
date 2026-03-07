@@ -7,33 +7,6 @@
 
 set -euo pipefail
 
-# --- Official Claude plugins (claude-plugins-official) ---
-
-OFFICIAL_PLUGINS=(
-  code-review
-  pr-review-toolkit
-  superpowers
-  feature-dev
-  github
-  typescript-lsp
-  pyright-lsp
-  gopls-lsp
-  rust-analyzer-lsp
-  kotlin-lsp
-)
-
-echo "[setup-plugins] Installing official Claude plugins..."
-for plugin in "${OFFICIAL_PLUGINS[@]}"; do
-  echo "[setup-plugins] Installing: ${plugin}@claude-plugins-official"
-  if ! claude plugin install "${plugin}@claude-plugins-official" 2>&1; then
-    echo "[setup-plugins] Warning: failed to install ${plugin}, skipping" >&2
-  fi
-done
-
-if [[ -z "${GITHUB_PERSONAL_ACCESS_TOKEN:-}" ]]; then
-  echo "[setup-plugins] Warning: GITHUB_PERSONAL_ACCESS_TOKEN is not set — github plugin will fail to authenticate" >&2
-fi
-
 # --- Marketplace registration ---
 
 OFFICIAL_MARKETPLACE="anthropics/claude-plugins-official"
@@ -50,6 +23,33 @@ echo "[setup-plugins] Registering marketplace: ${MARKETPLACE_REPO}"
 if ! claude plugin marketplace add "${MARKETPLACE_REPO}" 2>&1; then
   echo "[setup-plugins] Warning: mrn-plugins marketplace registration failed, continuing anyway"
 fi
+
+# --- Official Claude plugins (claude-plugins-official) ---
+
+OFFICIAL_PLUGINS=(
+  code-review
+  pr-review-toolkit
+  superpowers
+  feature-dev
+  github
+  typescript-lsp
+  pyright-lsp
+  gopls-lsp
+  rust-analyzer-lsp
+  kotlin-lsp
+)
+
+if [[ -z "${GITHUB_PERSONAL_ACCESS_TOKEN:-}" ]]; then
+  echo "[setup-plugins] Warning: GITHUB_PERSONAL_ACCESS_TOKEN is not set — github plugin will fail to authenticate" >&2
+fi
+
+echo "[setup-plugins] Installing official Claude plugins..."
+for plugin in "${OFFICIAL_PLUGINS[@]}"; do
+  echo "[setup-plugins] Installing: ${plugin}@claude-plugins-official"
+  if ! claude plugin install "${plugin}@claude-plugins-official" 2>&1; then
+    echo "[setup-plugins] Warning: failed to install ${plugin}, skipping" >&2
+  fi
+done
 
 echo "[setup-plugins] Fetching plugin registry..."
 registry=$(curl -fsSL "${REGISTRY_URL}") || {
